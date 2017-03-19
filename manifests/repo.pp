@@ -48,17 +48,22 @@ class mongodb::repo (
           default  => undef
         }
         # Temp hack. Need to follow https://jira.mongodb.org/browse/SERVER-18329
-        if ($::lsbdistcodename == 'jessie') {
-          $release     = "wheezy/mongodb-org/${mongover[0]}.${mongover[1]}"
-        } else {
-          $release     = "${::lsbdistcodename}/mongodb-org/${mongover[0]}.${mongover[1]}"
-        }
+        #if ($::lsbdistcodename == 'jessie') {
+          #$release     = "wheezy/mongodb-org/${mongover[0]}.${mongover[1]}"
+        #} else {
+          #$release     = "${::lsbdistcodename}/mongodb-org/${mongover[0]}.${mongover[1]}"
+        #}
+	# Based on what the manual steps were to set up the repository, this code
+	# looks correct. There should be no reason to use the hack above. Apparently,
+	# there was a time when 'jessie' required the 'wheezy' repository (you can see 
+	# that on dv-mongo-[ab].
+        $release     = "${::lsbdistcodename}/mongodb-org/${mongover[0]}.${mongover[1]}"
         $repos       = $::operatingsystem ? {
           'Debian' => 'main',
           'Ubuntu' => 'multiverse',
           default => undef
         }
-        $key         = '492EAFE8CD016A07919F1D2B9ECBEC467F0CEB10'
+        $key         = '0C49F3730359A14518585931BC711F9BA15703C6'
         $key_server  = 'hkp://keyserver.ubuntu.com:80'
       } else {
         $location = $::operatingsystem ? {
@@ -68,7 +73,7 @@ class mongodb::repo (
         }
         $release     = 'dist'
         $repos       = '10gen'
-        $key         = '492EAFE8CD016A07919F1D2B9ECBEC467F0CEB10'
+        $key         = '0C49F3730359A14518585931BC711F9BA15703C6'
         $key_server  = 'hkp://keyserver.ubuntu.com:80'
       }
       class { '::mongodb::repo::apt': }
